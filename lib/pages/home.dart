@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   State<Home> createState() => _HomeState();
 }
@@ -9,20 +11,17 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: const [
-                RowWidget(),
-                Padding(
-                  padding: EdgeInsets.all(16),
-                ),
-                RowAndColumnWidget(),
+                ImagesAndIconWidget(),
+                Divider(),
+                BoxDecoratorWidget(),
+                Divider(),
+                InputDecoratorsWidget(),
               ],
             ),
           ),
@@ -32,119 +31,84 @@ class _HomeState extends State<Home> {
   }
 }
 
-class RowWidget extends StatelessWidget {
-  const RowWidget({
-    super.key,
-  });
+class ImagesAndIconWidget extends StatelessWidget {
+  const ImagesAndIconWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Container(
-          color: Colors.yellow,
-          height: 40,
-          width: 40,
+        Image(
+          image: const AssetImage('assets/images/logo.jpeg'),
+          fit: BoxFit.cover,
+          width: MediaQuery.of(context).size.width / 3,
         ),
-        const Padding(
-          padding: EdgeInsets.all(16),
+        Image.network(
+          'https://docs.flutter.dev/assets/images/docs/catalog-widget-placeholder.png',
+          width: MediaQuery.of(context).size.width / 3,
         ),
-        Expanded(
-          child: Container(
-            color: Colors.amber,
-            height: 40,
-            width: 40,
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.all(16),
-        ),
-        Container(
-          color: Colors.brown,
-          height: 40,
-          width: 40,
+        const Icon(
+          Icons.brush,
+          color: Colors.lightBlue,
+          size: 48,
         ),
       ],
     );
   }
 }
 
-class RowAndColumnWidget extends StatelessWidget {
-  const RowAndColumnWidget({
-    super.key,
-  });
+class BoxDecoratorWidget extends StatelessWidget {
+  const BoxDecoratorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              color: Colors.yellow,
-              height: 60,
-              width: 60,
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16),
-            ),
-            Container(
-              color: Colors.amber,
-              height: 40,
-              width: 40,
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16),
-            ),
-            Container(
-              color: Colors.brown,
-              height: 20,
-              width: 20,
-            ),
-            const Divider(),
-            const RowAndStackWidget(),
-            const Divider(),
-            const Text('End of the line')
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.orange,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 10,
+              offset: Offset(0, 10),
+            )
           ],
         ),
-      ],
+      ),
     );
   }
 }
 
-class RowAndStackWidget extends StatelessWidget {
-  const RowAndStackWidget({
-    super.key,
-  });
+class InputDecoratorsWidget extends StatelessWidget {
+  const InputDecoratorsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        CircleAvatar(
-          backgroundColor: Colors.lightGreen,
-          radius: 100,
-          child: Stack(
-            children: [
-              Container(
-                color: Colors.yellow,
-                height: 100,
-                width: 100,
-              ),
-              Container(
-                color: Colors.amber,
-                height: 60,
-                width: 60,
-              ),
-              Container(
-                color: Colors.brown,
-                height: 40,
-                width: 40,
-              ),
-            ],
+        TextField(
+          keyboardType: TextInputType.text,
+          style: TextStyle(
+            color: Colors.grey.shade800,
+            fontSize: 16,
           ),
+          decoration: const InputDecoration(
+            labelText: "Notes",
+            labelStyle: TextStyle(color: Colors.purple),
+            border: OutlineInputBorder(),
+          ),
+        ),
+        const Divider(
+          color: Colors.lightGreen,
+          height: 50,
+        ),
+        TextFormField(
+          decoration: const InputDecoration(labelText: 'Enter your notes'),
         )
       ],
     );
