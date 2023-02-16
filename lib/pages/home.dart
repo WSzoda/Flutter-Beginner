@@ -8,75 +8,67 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
+  final Order _order = Order();
+
+  String? _validateItemRequired(String value) {
+    return value.isEmpty ? "Item required" : null;
+  }
+
+  String? _validateItemCount(String value) {
+    int? valueAsInteger = value.isEmpty ? 0 : int.tryParse(value);
+    return valueAsInteger == 0 ? 'At least one Item is Required' : null;
+  }
+
+  void _submitOrder() {
+    if (_formStateKey.currentState!.validate()) {
+      _formStateKey.currentState?.save();
+      print('Order Item: ${_order.item}');
+      print('Order Quantity: ${_order.quantity}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: const [
-                ImagesAndIconWidget(),
-                Divider(),
-                BoxDecoratorWidget(),
-                Divider(),
-                InputDecoratorsWidget(),
-              ],
+        child: Column(
+          children: [
+            Form(
+              key: _formStateKey,
+              autovalidateMode: AutovalidateMode.always,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Espresso',
+                        labelText: 'Item',
+                      ),
+                      validator: (value) => _validateItemRequired(value!),
+                      onSaved: (newValue) => _order.item = newValue!,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: '3',
+                        labelText: 'Quantity',
+                      ),
+                      validator: (value) => _validateItemCount(value!),
+                      onSaved: (newValue) =>
+                          _order.quantity = int.tryParse(newValue!)!,
+                    ),
+                    Divider(
+                      height: 32,
+                    ),
+                    ElevatedButton(
+                      onPressed: () => _submitOrder(),
+                      child: Text('Save'),
+                    )
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ImagesAndIconWidget extends StatelessWidget {
-  const ImagesAndIconWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Image(
-          image: const AssetImage('assets/images/logo.jpeg'),
-          fit: BoxFit.cover,
-          width: MediaQuery.of(context).size.width / 3,
-        ),
-        Image.network(
-          'https://docs.flutter.dev/assets/images/docs/catalog-widget-placeholder.png',
-          width: MediaQuery.of(context).size.width / 3,
-        ),
-        const Icon(
-          Icons.brush,
-          color: Colors.lightBlue,
-          size: 48,
-        ),
-      ],
-    );
-  }
-}
-
-class BoxDecoratorWidget extends StatelessWidget {
-  const BoxDecoratorWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.orange,
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 10,
-              offset: Offset(0, 10),
-            )
           ],
         ),
       ),
@@ -84,33 +76,7 @@ class BoxDecoratorWidget extends StatelessWidget {
   }
 }
 
-class InputDecoratorsWidget extends StatelessWidget {
-  const InputDecoratorsWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          keyboardType: TextInputType.text,
-          style: TextStyle(
-            color: Colors.grey.shade800,
-            fontSize: 16,
-          ),
-          decoration: const InputDecoration(
-            labelText: "Notes",
-            labelStyle: TextStyle(color: Colors.purple),
-            border: OutlineInputBorder(),
-          ),
-        ),
-        const Divider(
-          color: Colors.lightGreen,
-          height: 50,
-        ),
-        TextFormField(
-          decoration: const InputDecoration(labelText: 'Enter your notes'),
-        )
-      ],
-    );
-  }
+class Order {
+  late String item;
+  late int quantity;
 }
