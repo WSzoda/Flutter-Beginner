@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pogoda/widgets/animated_container.dart';
-import 'package:pogoda/widgets/animated_cross_fade.dart';
-import 'package:pogoda/widgets/animated_opacity.dart';
+import 'package:pogoda/widgets/animated_balloon.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,15 +13,18 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        children: const [
-          AnimatedContainerWidget(),
-          Divider(),
-          AnimatedCrossFadeWidget(),
-          Divider(),
-          AnimatedOpacityWidget(),
-        ],
-      )),
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                AnimatedBaloonWidget(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
