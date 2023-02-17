@@ -8,84 +8,72 @@ class AnimatedBaloonWidget extends StatefulWidget {
 }
 
 class _AnimatedBaloonWidgetState extends State<AnimatedBaloonWidget>
-    with TickerProviderStateMixin {
-  late AnimationController _controllerFloatUp;
-  late AnimationController _controllerGrowSize;
-  late Animation<double> _animationFloatUp;
-  late Animation<double> _animationGrowSize;
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation _animationFloatUp;
+  late Animation _animationGrowUp;
 
   @override
   void initState() {
     super.initState();
 
-    _controllerFloatUp = AnimationController(
+    _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
-    );
-
-    _controllerGrowSize = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: Duration(seconds: 4),
     );
   }
 
   @override
   void dispose() {
-    _controllerFloatUp.dispose();
-    _controllerGrowSize.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    double ballonHeight = MediaQuery.of(context).size.height / 2;
-    double ballonWidth = MediaQuery.of(context).size.width / 3;
+    double balloonHeight = MediaQuery.of(context).size.height / 2;
+    double balloonWidth = MediaQuery.of(context).size.width / 3;
     double ballonBottomLocation =
-        MediaQuery.of(context).size.height - ballonHeight;
+        MediaQuery.of(context).size.height - balloonHeight;
 
     _animationFloatUp = Tween(begin: ballonBottomLocation, end: 0.0).animate(
       CurvedAnimation(
-        parent: _controllerFloatUp,
+        parent: _controller,
         curve: Curves.fastOutSlowIn,
       ),
     );
 
-    _animationGrowSize = Tween(begin: 50.0, end: ballonWidth).animate(
+    _animationGrowUp = Tween(begin: 50.0, end: balloonWidth).animate(
       CurvedAnimation(
-        parent: _controllerGrowSize,
+        parent: _controller,
         curve: Curves.elasticInOut,
       ),
     );
-
-    _controllerFloatUp.forward();
-    _controllerGrowSize.forward();
 
     return AnimatedBuilder(
       animation: _animationFloatUp,
       builder: (context, child) {
         return Container(
-          child: child,
           margin: EdgeInsets.only(
             top: _animationFloatUp.value,
           ),
-          width: _animationGrowSize.value,
+          width: _animationGrowUp.value,
+          child: child,
         );
       },
       child: GestureDetector(
-        onTap: () {
-          if (_controllerFloatUp.isCompleted) {
-            _controllerFloatUp.reverse();
-            _controllerGrowSize.reverse();
-          } else {
-            _controllerFloatUp.forward();
-            _controllerGrowSize.forward();
-          }
-        },
         child: Image.asset(
           'assets/images/BeginningGoogleFlutter-Balloon.png',
-          height: ballonHeight,
-          width: ballonWidth,
+          height: balloonHeight,
+          width: balloonWidth,
         ),
+        onTap: () {
+          if (_controller.isCompleted) {
+            _controller.reverse();
+          } else {
+            _controller.forward();
+          }
+        },
       ),
     );
   }

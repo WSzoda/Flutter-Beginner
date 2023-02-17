@@ -14,11 +14,11 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
-              children: [
+              children: const [
                 AnimatedBaloonWidget(),
               ],
             ),
