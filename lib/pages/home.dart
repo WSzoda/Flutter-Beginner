@@ -8,75 +8,128 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
-  final Order _order = Order();
-
-  String? _validateItemRequired(String value) {
-    return value.isEmpty ? "Item required" : null;
-  }
-
-  String? _validateItemCount(String value) {
-    int? valueAsInteger = value.isEmpty ? 0 : int.tryParse(value);
-    return valueAsInteger == 0 ? 'At least one Item is Required' : null;
-  }
-
-  void _submitOrder() {
-    if (_formStateKey.currentState!.validate()) {
-      _formStateKey.currentState?.save();
-      print('Order Item: ${_order.item}');
-      print('Order Quantity: ${_order.quantity}');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Form(
-              key: _formStateKey,
-              autovalidateMode: AutovalidateMode.always,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        hintText: 'Espresso',
-                        labelText: 'Item',
-                      ),
-                      validator: (value) => _validateItemRequired(value!),
-                      onSaved: (newValue) => _order.item = newValue!,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: '3',
-                        labelText: 'Quantity',
-                      ),
-                      validator: (value) => _validateItemCount(value!),
-                      onSaved: (newValue) =>
-                          _order.quantity = int.tryParse(newValue!)!,
-                    ),
-                    Divider(
-                      height: 32,
-                    ),
-                    ElevatedButton(
-                      onPressed: () => _submitOrder(),
-                      child: Text('Save'),
-                    )
-                  ],
-                ),
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: const [
+                OrientationLayoutIconsWidget(),
+                Divider(),
+                OrientationLayoutWidget(),
+                Divider(),
+                GridViewWidget(),
+                Divider(),
+                OrientationBuilderWidget()
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-class Order {
-  late String item;
-  late int quantity;
+class OrientationLayoutIconsWidget extends StatelessWidget {
+  const OrientationLayoutIconsWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    return orientation == Orientation.portrait
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(
+                Icons.school,
+                size: 48,
+              ),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(
+                Icons.school,
+                size: 48,
+              ),
+              Icon(
+                Icons.brush,
+                size: 48,
+              )
+            ],
+          );
+  }
+}
+
+class OrientationLayoutWidget extends StatelessWidget {
+  const OrientationLayoutWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+
+    if (orientation == Orientation.portrait) {
+      return Container(
+        color: Colors.yellow,
+        width: 100,
+        height: 100,
+      );
+    } else {
+      return Container(
+        color: Colors.green,
+        width: 200,
+        height: 200,
+      );
+    }
+  }
+}
+
+class GridViewWidget extends StatelessWidget {
+  const GridViewWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    return GridView.count(
+      crossAxisCount: orientation == Orientation.portrait ? 2 : 4,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      childAspectRatio: 5,
+      children: List.generate(8, (index) {
+        return Text(
+          "Grid $index",
+          textAlign: TextAlign.center,
+        );
+      }),
+    );
+  }
+}
+
+class OrientationBuilderWidget extends StatelessWidget {
+  const OrientationBuilderWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return OrientationBuilder(builder: (context, orientation) {
+      return orientation == Orientation.portrait
+          ? Container(
+              alignment: Alignment.center,
+              color: Colors.yellow,
+              height: 100,
+              width: 100,
+              child: Text('Portrait'),
+            )
+          : Container(
+              alignment: Alignment.center,
+              color: Colors.lightGreen,
+              height: 100,
+              width: 200,
+              child: Text('Landscape'),
+            );
+    });
+  }
 }
