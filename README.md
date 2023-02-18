@@ -1,6 +1,6 @@
-# pogoda
+# Flutter Beginner
 
-A new Flutter project.
+Project absed on book "Flutter Beginner
 
 ## Getting Started
 
