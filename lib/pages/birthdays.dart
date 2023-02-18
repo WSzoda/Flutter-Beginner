@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class Gratitude extends StatelessWidget {
-  const Gratitude({super.key});
+class Birthdays extends StatelessWidget {
+  const Birthdays({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
         child: Icon(
-          Icons.sentiment_satisfied,
+          Icons.cake,
           size: 120.0,
-          color: Colors.lightGreen,
+          color: Colors.orange,
         ),
       ),
     );
